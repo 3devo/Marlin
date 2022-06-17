@@ -366,18 +366,38 @@
 // Onboard SD card
 // Must use soft SPI because Marlin's default hardware SPI is tied to LCD's EXP2
 //
-#if SD_CONNECTION_IS(LCD)
-  #define SDSS                       EXP2_07_PIN
-  #define SD_SS_PIN                         SDSS
-  #define SD_SCK_PIN                 EXP2_09_PIN
-  #define SD_MISO_PIN                EXP2_10_PIN
-  #define SD_MOSI_PIN                EXP2_05_PIN
-  #define SD_DETECT_PIN              EXP2_04_PIN
-#elif SD_CONNECTION_IS(ONBOARD)
+/*
+  #if SD_CONNECTION_IS(ONBOARD)
+
   #define SDIO_SUPPORT                            // Use SDIO for onboard SD
+  #define SDIO_D0_PIN                       PC8
+  #define SDIO_D1_PIN                       PC9
+  #define SDIO_D2_PIN                       PC10
+  #define SDIO_D3_PIN                       PC11
+  #define SDIO_CK_PIN                       PC12
+  #define SDIO_CMD_PIN                      PD2
+
+#elif SD_CONNECTION_IS(LCD)
+
+  #define SDSS                              PA4
+  #define SD_SS_PIN                         SDSS
+  #define SD_SCK_PIN                        PA5
+  #define SD_MISO_PIN                       PA6
+  #define SD_MOSI_PIN                       PA7
+  #define SD_DETECT_PIN                     PC4
+
 #elif SD_CONNECTION_IS(CUSTOM_CABLE)
   #error "No custom SD drive cable defined for this board."
 #endif
+*/
+
+#define SDIO_SUPPORT                            // Use SDIO for onboard SD
+#define SDIO_D0_PIN                       PC8
+#define SDIO_D1_PIN                       PC9
+#define SDIO_D2_PIN                       PC10
+#define SDIO_D3_PIN                       PC11
+#define SDIO_CK_PIN                       PC12
+#define SDIO_CMD_PIN                      PD2
 
 #if ENABLED(BTT_MOTOR_EXPANSION)
   /**       -----                        -----
@@ -512,6 +532,40 @@
   #endif
 
 #endif // HAS_WIRED_LCD
+
+#if HAS_SPI_LCD
+  #define BEEPER_PIN       PA15
+  #define BTN_ENC          PB6
+
+  #if ENABLED(CR10_STOCKDISPLAY)
+    #define LCD_PINS_RS    PB8
+
+    #define BTN_EN1        PA9
+    #define BTN_EN2        PA10
+
+    #define LCD_PINS_ENABLE PB7
+    #define LCD_PINS_D4    PB9
+
+  //#else
+    //#error "Only CR10_STOCKDISPLAY is currently supported on the BIGTREE_SKR_E3_DIP."
+  #endif
+ /////////////////////////////////////////////////////////////////////////////////////////
+
+      #if ENABLED(ENDER2_DISPLAY)
+        #define BTN_EN1      PA9
+        #define BTN_EN2      PA10
+        #define DOGLCD_CS    PB8
+        #define DOGLCD_A0    PB9
+        #define DOGLCD_SCK   PA15
+        #define DOGLCD_MOSI  PB7
+        #define FORCE_SOFT_SPI
+        #define LCD_BACKLIGHT_PIN -1
+      #endif
+
+  //#endif
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#endif // HAS_SPI_LCD
 
 // Alter timing for graphical display
 #if IS_U8GLIB_ST7920
